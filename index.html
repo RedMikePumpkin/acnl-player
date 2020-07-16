@@ -1,0 +1,89 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC:NL player</title>
+  </head>
+  <body>
+    <h1>Animal Crossing: New Leaf hourly music player</h1>
+    <div id="player"></div>
+    <script>
+      // function to get the current hour
+      var getHour = () => (new Date()).getHours();
+      // stores the last hour so that i know when to reload the video
+      var lastHour = getHour();
+      var urls = [ // video id's for each hour, i'll change these if the videos ever get taken done
+        '_4G7EWJ7Ik8', // 12 AM
+        'ogZOuyEUaqM', //  1 AM
+        '6ctYQ2giDfw', //  2 AM
+        'rjoi8HzYjnY', //  3 AM
+        'alCXAH7tzT4', //  4 AM
+        'YsRHAojQK20', //  5 AM
+        'tnlpjqXHQnI', //  6 AM
+        'DHskPDrg-fQ', //  7 AM
+        'r7Ncy-yY9Uw', //  8 AM
+        'qRAt72y7Dl0', //  9 AM
+        'BtxRvNYYUUo', // 10 AM
+        '1ZXwbqjoHQ8', // 11 AM
+        'kginZ7__1aE', // 12 PM
+        'JkHgU_O6f64', //  1 PM
+        'yQicvIsa8W8', //  2 PM
+        'WalIFXKCmHU', //  3 PM
+        'N5Xx8r2uTLI', //  4 PM
+        '37UjXU-3wZ8', //  5 PM
+        '5QJaWg5fOAo', //  6 PM
+        'qYhA2QqFDS8', //  7 PM
+        'Fksz_uENt9U', //  8 PM
+        'ZUPm4MT64VU', //  9 PM
+        'YukcuUPS05U', // 10 PM
+        'xbjbGNa-7eE'  // 11 PM
+      ];
+      // debug stuff
+      // var debugHour = 0;
+      // var getHour = () => debugHour;
+  
+      // load iframe api
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  
+      // create video after load
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '360',
+          width: '640',
+          videoId: urls[getHour()],
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          },
+          playerVars: {
+            'autoplay': true,
+            'loop': true
+          }
+        });
+      }
+  
+      // this doesn't work but it might so imma keep it here
+      function onPlayerReady(event) {
+        player.playVideo();
+      }
+  
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.ENDED) {
+          // loop the video if it ends
+          player.seekTo(0, true);
+          // check what hour it is
+          var hour = getHour();
+          if (hour != lastHour) {
+            // hour changed, change the song
+            lastHour = hour;
+            player.loadVideoById(urls[hour])
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
