@@ -39,8 +39,9 @@
         'xbjbGNa-7eE'  // 11 PM
       ];
       // debug stuff
-      // var debugHour = 0;
-      // var getHour = () => debugHour;
+      var debugHour = 0;
+      var getHour = () => debugHour;
+  
   
       // load iframe api
       var tag = document.createElement('script');
@@ -76,6 +77,14 @@
           // loop the video if it ends
           player.seekTo(0, true);
           // check what hour it is
+          var hour = getHour();
+          if (hour != lastHour) {
+            // hour changed, change the song
+            lastHour = hour;
+            player.loadVideoById(urls[hour])
+          }
+        } else if (event.data == YT.PlayerState.PLAYING) {
+          // check when you start playing
           var hour = getHour();
           if (hour != lastHour) {
             // hour changed, change the song
